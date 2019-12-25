@@ -1,26 +1,27 @@
-const blackList = ['youtube', 'reddit']
+const blackList = [/.*youtube\.com.*/g, /.*reddit\/.com*/g];
+
 chrome.tabs.query({}, tabs => {
   tabs.forEach((tab: chrome.tabs.Tab) => {
-    const url = tab.url
+    const url = tab.url;
 
     if (!tab || !url) {
-      return
+      return;
     }
 
-    if (blackList.some(element => url.includes(element))) {
+    if (blackList.some(element => url.match(element))) {
       if (tab.id) {
-        chrome.tabs.remove(tab.id)
+        chrome.tabs.remove(tab.id);
       }
     }
-  })
-})
+  });
+});
 
 chrome.webRequest.onBeforeRequest.addListener(
   () => {
     return {
-      redirectUrl: 'https://www.google.com',
-    }
+      redirectUrl: "https://www.google.com"
+    };
   },
-  { urls: ['*://www.youtube.com/*'] },
-  ['blocking']
-)
+  { urls: ["*://www.youtube.com/*"] },
+  ["blocking"]
+);
