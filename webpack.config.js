@@ -18,7 +18,7 @@ const extensionReloader = nodeEnv === "watch" ? new ExtensionReloader({
 	reloadPage: true,
 	entries: {
 		background: 'background',
-		extensionPage: ['popup', 'options'],
+		extensionPage: ['popup', 'options, blockPage'],
 	}
 }) : () => {this.apply = () => {}};
 
@@ -28,6 +28,7 @@ module.exports = {
         background: path.join(sourceRootPath, 'ts', 'background', 'index.ts'),
         options: path.join(sourceRootPath, 'ts', 'options', 'index.tsx'),
         popup: path.join(sourceRootPath, 'ts', 'popup', 'index.tsx'),
+        blockPage: path.join(sourceRootPath, 'ts', 'blockPage', 'index.tsx'),
     },
     output: {
         path: distRootPath,
@@ -56,6 +57,13 @@ module.exports = {
             filename: 'popup.html',
             title: 'Deep Zone - Popup',
             chunks: ['popup'],
+        }),
+        new HtmlWebpackPlugin({
+            template: path.join(sourceRootPath, 'html', 'blockPage.html'),
+            inject: 'body',
+            filename: 'blockPage.html',
+            title: 'Deep Zone - Blockpage',
+            chunks: ['blockPage'],
         }),
         new CopyWebpackPlugin([
             {

@@ -1,5 +1,5 @@
 const blackList = ['*://www.youtube.com/*']
-const redirectUrl = 'https://www.google.com'
+const redirectUrl = chrome.runtime.getURL('/blockPage.html')
 
 const urlQuery = {
   url: blackList,
@@ -22,6 +22,6 @@ chrome.webRequest.onBeforeRequest.addListener(
       redirectUrl,
     }
   },
-  { urls: blackList },
+  { urls: blackList, types: ['main_frame'] },
   ['blocking']
 )
