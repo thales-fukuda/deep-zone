@@ -1,27 +1,27 @@
-const blackList = [/.*youtube\.com.*/g, /.*reddit\/.com*/g];
+const blackList = ['*://www.youtube.com/*']
+const redirectUrl = 'https://www.google.com'
 
-chrome.tabs.query({}, tabs => {
+const urlQuery = {
+  url: blackList,
+}
+
+chrome.tabs.query(urlQuery, tabs => {
   tabs.forEach((tab: chrome.tabs.Tab) => {
-    const url = tab.url;
+    const id = tab.id
 
-    if (!tab || !url) {
-      return;
+    if (!tab || !id) {
+      return
     }
-
-    if (blackList.some(element => url.match(element))) {
-      if (tab.id) {
-        chrome.tabs.remove(tab.id);
-      }
-    }
-  });
-});
+    chrome.tabs.remove(id)
+  })
+})
 
 chrome.webRequest.onBeforeRequest.addListener(
   () => {
     return {
-      redirectUrl: "https://www.google.com"
-    };
+      redirectUrl,
+    }
   },
-  { urls: ["*://www.youtube.com/*"] },
-  ["blocking"]
-);
+  { urls: blackList },
+  ['blocking']
+)
