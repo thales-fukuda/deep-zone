@@ -5,23 +5,46 @@ const urlQuery = {
   url: blackList,
 }
 
-chrome.tabs.query(urlQuery, tabs => {
-  tabs.forEach((tab: chrome.tabs.Tab) => {
-    const id = tab.id
+const redirectToBlockPage = () => {
+  return {
+    redirectUrl,
+  }
+}
 
-    if (!tab || !id) {
-      return
-    }
-    chrome.tabs.remove(id)
+const startDeepZone = () => {
+  chrome.tabs.query(urlQuery, tabs => {
+    tabs.forEach((tab: chrome.tabs.Tab) => {
+      const id = tab.id
+
+      if (!tab || !id) {
+        return
+      }
+      chrome.tabs.remove(id)
+    })
   })
-})
 
-chrome.webRequest.onBeforeRequest.addListener(
-  () => {
-    return {
-      redirectUrl,
-    }
-  },
-  { urls: blackList, types: ['main_frame'] },
-  ['blocking']
-)
+  chrome.webRequest.onBeforeRequest.addListener(
+    redirectToBlockPage,
+    { urls: blackList, types: ['main_frame'] },
+    ['blocking']
+  )
+}
+
+chrome.runtime.onMessage.addListener(request => {
+  if (!request) {
+    return
+  }
+
+  switch (request.message) {
+    case 'start':
+      startDeepZone()
+      break
+
+    case 'stop':
+      chrome.webRequest.onBeforeRequest.removeListener(redirectToBlockPage)
+      break
+
+    default:
+      break
+  }
+})
