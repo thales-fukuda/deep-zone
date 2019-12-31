@@ -1,9 +1,4 @@
-const blackList = ['*://www.youtube.com/*']
 const redirectUrl = chrome.runtime.getURL('/blockPage.html')
-
-const urlQuery = {
-  url: blackList,
-}
 
 const redirectToBlockPage = () => {
   return {
@@ -12,22 +7,34 @@ const redirectToBlockPage = () => {
 }
 
 const startDeepZone = () => {
-  chrome.tabs.query(urlQuery, tabs => {
-    tabs.forEach((tab: chrome.tabs.Tab) => {
-      const id = tab.id
+  chrome.storage.sync.get(['blacklisted'], result => {
+    const blacklist = result.blacklisted
 
-      if (!tab || !id) {
-        return
-      }
-      chrome.tabs.remove(id)
+    if (!blacklist) {
+      return
+    }
+
+    const urlQuery = {
+      url: blacklist,
+    }
+
+    chrome.tabs.query(urlQuery, tabs => {
+      tabs.forEach((tab: chrome.tabs.Tab) => {
+        const id = tab.id
+
+        if (!tab || !id) {
+          return
+        }
+        chrome.tabs.remove(id)
+      })
     })
-  })
 
-  chrome.webRequest.onBeforeRequest.addListener(
-    redirectToBlockPage,
-    { urls: blackList, types: ['main_frame'] },
-    ['blocking']
-  )
+    chrome.webRequest.onBeforeRequest.addListener(
+      redirectToBlockPage,
+      { urls: blacklist, types: ['main_frame'] },
+      ['blocking']
+    )
+  })
 }
 
 chrome.runtime.onMessage.addListener(request => {
