@@ -1,12 +1,14 @@
 import React from 'react'
 
 const Popup = () => {
+  const { runtime } = chrome
+
   const onStart = () => {
-    chrome.runtime.sendMessage({ message: 'start' })
+    runtime.sendMessage({ message: 'start' })
   }
 
   const onStop = () => {
-    chrome.runtime.sendMessage({ message: 'stop' })
+    runtime.sendMessage({ message: 'stop' })
   }
   return (
     <>

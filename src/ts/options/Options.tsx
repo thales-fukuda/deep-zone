@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
 
 const Options = () => {
+  const { storage } = chrome
   const [inputValue, setInputValue] = useState('')
 
   const addSite = async () => {
     let storedItems: string[] = []
     const formatedValue = `*://*.${inputValue}/*`
 
-    chrome.storage.sync.get(['blacklisted'], result => {
+    storage.sync.get(['blacklisted'], result => {
       if (!result.blacklisted) {
-        chrome.storage.sync.set({ blacklisted: [formatedValue] })
+        storage.sync.set({ blacklisted: [formatedValue] })
         return
       }
 
       storedItems = [...result.blacklisted, formatedValue]
-      chrome.storage.sync.set({ blacklisted: storedItems })
+      storage.sync.set({ blacklisted: storedItems })
     })
   }
 

@@ -1,6 +1,7 @@
-import { closeTabs } from './utils'
+import { closeTabs, restoreTabs } from './utils'
 
-const redirectUrl = chrome.runtime.getURL('/blockPage.html')
+const { storage, webRequest, runtime } = chrome
+const redirectUrl = runtime.getURL('/blockPage.html')
 let closedTabs: string[] = []
 
 const redirectToBlockPage = () => {
@@ -10,18 +11,18 @@ const redirectToBlockPage = () => {
 }
 
 const startDeepZone = () => {
-  chrome.storage.sync.get(['blacklisted'], result => {
+  storage.sync.get(['blacklisted'], result => {
     const blacklist = result.blacklisted
 
     if (!blacklist) {
       return
     }
 
-    closeTabs({ url: blacklist }, list => {
+    closeTabs(blacklist, list => {
       closedTabs = list
     })
 
-    chrome.webRequest.onBeforeRequest.addListener(
+    webRequest.onBeforeRequest.addListener(
       redirectToBlockPage,
       { urls: blacklist, types: ['main_frame'] },
       ['blocking']
@@ -29,27 +30,19 @@ const startDeepZone = () => {
   })
 }
 
-const restoreTabs = (closed: string[]) => {
-  closed.forEach((url: string) => {
-    chrome.tabs.create({
-      url,
-    })
-  })
+const stopDeepZone = () => {
+  webRequest.onBeforeRequest.removeListener(redirectToBlockPage)
+  restoreTabs(closedTabs)
 }
 
-chrome.runtime.onMessage.addListener(request => {
-  if (!request) {
-    return
-  }
-
+runtime.onMessage.addListener(request => {
   switch (request.message) {
     case 'start':
       startDeepZone()
       break
 
     case 'stop':
-      chrome.webRequest.onBeforeRequest.removeListener(redirectToBlockPage)
-      restoreTabs(closedTabs)
+      stopDeepZone()
       break
 
     default:
