@@ -4,7 +4,7 @@ const Options = () => {
   const [inputValue, setInputValue] = useState('')
 
   const addSite = async () => {
-    let storedItems: String[] = []
+    let storedItems: string[] = []
     const formatedValue = `*://*.${inputValue}/*`
 
     chrome.storage.sync.get(['blacklisted'], result => {

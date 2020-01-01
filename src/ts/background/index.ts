@@ -1,4 +1,7 @@
+import { closeTabs } from './utils'
+
 const redirectUrl = chrome.runtime.getURL('/blockPage.html')
+let closedTabs: string[] = []
 
 const redirectToBlockPage = () => {
   return {
@@ -14,19 +17,8 @@ const startDeepZone = () => {
       return
     }
 
-    const urlQuery = {
-      url: blacklist,
-    }
-
-    chrome.tabs.query(urlQuery, tabs => {
-      tabs.forEach((tab: chrome.tabs.Tab) => {
-        const id = tab.id
-
-        if (!tab || !id) {
-          return
-        }
-        chrome.tabs.remove(id)
-      })
+    closeTabs({ url: blacklist }, list => {
+      closedTabs = list
     })
 
     chrome.webRequest.onBeforeRequest.addListener(
@@ -34,6 +26,14 @@ const startDeepZone = () => {
       { urls: blacklist, types: ['main_frame'] },
       ['blocking']
     )
+  })
+}
+
+const restoreTabs = (closed: string[]) => {
+  closed.forEach((url: string) => {
+    chrome.tabs.create({
+      url,
+    })
   })
 }
 
@@ -49,6 +49,7 @@ chrome.runtime.onMessage.addListener(request => {
 
     case 'stop':
       chrome.webRequest.onBeforeRequest.removeListener(redirectToBlockPage)
+      restoreTabs(closedTabs)
       break
 
     default:
