@@ -18,6 +18,8 @@ const startDeepZone = () => {
       return
     }
 
+    storage.local.set({ deepZoneActive: true })
+
     closeTabs(blacklist, list => {
       closedTabs = list
     })
@@ -31,6 +33,7 @@ const startDeepZone = () => {
 }
 
 const stopDeepZone = () => {
+  storage.local.set({ deepZoneActive: false })
   webRequest.onBeforeRequest.removeListener(redirectToBlockPage)
   restoreTabs(closedTabs)
 }
