@@ -14,7 +14,7 @@ const startDeepZone = () => {
   storage.sync.get(['blacklisted'], result => {
     const urlBlacklist = result.blacklisted
 
-    if (!urlBlacklist) {
+    if (!urlBlacklist.length) {
       return
     }
 
