@@ -1,11 +1,13 @@
 import React from 'react'
 
+import { Container, Title, Section } from './elements'
+
 const BlockPage = () => {
   return (
-    <>
-      <h1>Block Page</h1>
-      <span>test</span>
-    </>
+    <Container>
+      <Section>Block page</Section>
+      <Title>This page is blocked!</Title>
+    </Container>
   )
 }
 
