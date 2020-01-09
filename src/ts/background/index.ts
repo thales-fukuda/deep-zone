@@ -12,21 +12,25 @@ const redirectToBlockPage = () => {
 
 const startDeepZone = () => {
   storage.sync.get(['blacklisted'], result => {
-    const blacklist = result.blacklisted
+    const urlBlacklist = result.blacklisted
 
-    if (!blacklist) {
+    if (!urlBlacklist) {
       return
     }
 
+    const formatedBlacklist = urlBlacklist.map(
+      (url: string) => `*://*.${url}/*`
+    )
+
     storage.local.set({ deepZoneActive: true })
 
-    closeTabs(blacklist, list => {
+    closeTabs(formatedBlacklist, list => {
       closedTabs = list
     })
 
     webRequest.onBeforeRequest.addListener(
       redirectToBlockPage,
-      { urls: blacklist, types: ['main_frame'] },
+      { urls: formatedBlacklist, types: ['main_frame'] },
       ['blocking']
     )
   })

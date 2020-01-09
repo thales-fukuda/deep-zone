@@ -40,7 +40,7 @@ module.exports = {
     module: {
         rules: [
             { test: /\.(js|ts|tsx)?$/, loader: "awesome-typescript-loader", exclude: /node_modules/ },
-        ]
+        ],
     },
     plugins: [
         new CheckerPlugin(),

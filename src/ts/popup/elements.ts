@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import ds from '../designSystem'
 
 export const PopupContainer = styled.div`
-  width: 250px;
-  height: 180px;
+  width: 200px;
+  height: 130px;
   background-color: ${ds.colors.backgroundGray};
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@ export const Title = styled.h1`
   font-weight: 400;
   color: ${ds.colors.textGray};
   position: absolute;
-  bottom: 30px;
+  bottom: 5px;
 `
 
 interface ButtonProps {
