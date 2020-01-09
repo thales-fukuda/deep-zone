@@ -32,6 +32,11 @@ const Options = () => {
       return
     }
 
+    if (blacklist.includes(inputValue)) {
+      setInputValue('')
+      return
+    }
+
     storedItems = [...blacklist, inputValue]
     storage.sync.set({ blacklisted: storedItems })
     setBlacklist(storedItems)
