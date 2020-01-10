@@ -31,7 +31,7 @@ const Popup = () => {
       ) : (
         <Button onClick={onStart}>start</Button>
       )}
-      <Title>deep zone</Title>
+      {isActive && <Title>ACTIVE</Title>}
     </PopupContainer>
   )
 }

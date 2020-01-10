@@ -33,8 +33,8 @@ export const Button = styled.button<ButtonProps>`
 export const Title = styled.h1`
   font-size: 16px;
   font-family: 'Public Sans', sans-serif;
-  font-weight: 400;
-  color: ${ds.colors.textGray};
+  font-weight: bold;
+  color: ${ds.colors.red};
   position: absolute;
   bottom: 5px;
 `
