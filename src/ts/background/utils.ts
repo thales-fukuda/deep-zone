@@ -1,6 +1,7 @@
 import { Tab } from '../types'
 
 const { tabs } = chrome
+
 /**
  * @param blacklist - array of URL patterns to check and close tabs that match
  * @param callback - callback function to handle closed tabs
