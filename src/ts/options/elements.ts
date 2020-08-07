@@ -48,7 +48,7 @@ export const BlackListInput = styled.input`
 export const InputLeft = styled.span`
   padding: 10px 4px 10px 0;
   margin: 0;
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
   color: ${ds.colors.red};
 `

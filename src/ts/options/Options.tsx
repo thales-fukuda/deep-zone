@@ -62,7 +62,7 @@ const Options = () => {
         <Section>Options</Section>
         <BlackListLabel>
           <InputContainer>
-            <InputLeft>WWW.</InputLeft>
+            <InputLeft>https://</InputLeft>
             <BlackListInput
               type='text'
               value={inputValue}
@@ -76,7 +76,7 @@ const Options = () => {
           </LabelText>
         </BlackListLabel>
         <BlackList>
-          {blacklist.map((element, index) => (
+          {blacklist && blacklist.map((element, index) => (
             <BlackListElement key={Math.random()}>
               <CloseIcon onClick={() => removeSite(index)}>x</CloseIcon>
               {element}
